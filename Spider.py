@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import urllib.request
 import httplib2
+from urllib.parse import urljoin
 import tldextract
 
 # def get_domain(url):
@@ -35,27 +36,11 @@ def extract(page):
             
     for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
         if url.has_attr('href'):
-            add_link(url['href'])
+            url = urljoin(seed_domain,url['href'])
+            add_link(url)
 
 def crawl(page):
     if page not in crawled_urls:
         extract(page)
-        urls_queue.remove(page)
-
-
-
-# Tests
-# print("----------------------------------------")
-# urls_queue.add("http://toscrape.com")
-# print(urls_queue)
-
-# add_link("http://dev.toscrape.com")
-# add_link("http://not.a.link.toscrape.com")
-# add_link("http://google.com")
-# add_link("http://adsasdaf.com")
-# add_link("http://efu3r13re.com")
-# add_link("http://toscrape.com/ad/gg/23/")
-
-# print("----------------------------------------")
-# print(urls_queue)
-
+        crawled_urls.add(page)
+        urls_queue.discard(page)
