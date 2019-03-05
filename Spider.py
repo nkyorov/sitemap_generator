@@ -3,25 +3,31 @@ import urllib.request
 import httplib2
 import tldextract
 
+# def get_domain(url):
+#     domain = tldextract.extract(url).registered_domain
+#     return domain
+
+
 urls_queue = set()
 crawled_urls = set()
-base_url = "http://toscrape.com"
-domain = get_domain(base_url)
-
-def get_domain(url):
-    registered_domain = tldextract.extract(url).registered_domain
-    return registered_domain
+seed_url = "http://toscrape.com"
+seed_domain = tldextract.extract(seed_url).registered_domain
 
 def add_link(url):
-    FLAG_1 = False
-    FLAG_2 = False
+    NOT_SEEN = True
+    SAME_DOMAIN = True
+    
+    # Passed url domain
+    domain = tldextract.extract(url).registered_domain
 
     if(url in urls_queue) or (url in crawled_urls):
-        FLAG_1 = True
+        NOT_SEEN = False
     
-    if not FLAG_1:
-        urls_queue.add(url)
+    if not domain == seed_domain:
+        SAME_DOMAIN = False
 
+    if NOT_SEEN and SAME_DOMAIN:
+        urls_queue.add(url)
 
 def extract(page):
     http = httplib2.Http()
@@ -30,10 +36,26 @@ def extract(page):
     for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
         if url.has_attr('href'):
             add_link(url['href'])
-    
 
-extract(base_url)
-print(urls_queue)
+def crawl(page):
+    if page not in crawled_urls:
+        extract(page)
+        urls_queue.remove(page)
 
 
-print(get_domain('http://forums.bbc.co.uk'))
+
+# Tests
+# print("----------------------------------------")
+# urls_queue.add("http://toscrape.com")
+# print(urls_queue)
+
+# add_link("http://dev.toscrape.com")
+# add_link("http://not.a.link.toscrape.com")
+# add_link("http://google.com")
+# add_link("http://adsasdaf.com")
+# add_link("http://efu3r13re.com")
+# add_link("http://toscrape.com/ad/gg/23/")
+
+# print("----------------------------------------")
+# print(urls_queue)
+
