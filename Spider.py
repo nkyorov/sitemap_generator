@@ -31,7 +31,6 @@ class Spider:
                 print("Crawling: " + page)
                 Spider.crawled += 1
             else:
-                print(Spider.crawled)
                 sys.exit("Maximum page limit reached!")
 
 
@@ -49,10 +48,9 @@ class Spider:
         NOT_SEEN = True
         SAME_DOMAIN = True
         
-        # Passed url domain
         domain = tldextract.extract(url).registered_domain
 
-        if(url in Spider.urls_queue) or (url in Spider.crawled_urls):
+        if(url in Spider.urls_queue) and (url in Spider.crawled_urls):
             NOT_SEEN = False
         
         if not domain == Spider.seed_domain:
@@ -62,11 +60,17 @@ class Spider:
             Spider.urls_queue.add(url)
 
     def extract(page):
-        # http = httplib2.Http()
-        # status, response = http.requests(page)
         response = requests.get(page).text
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
                 url = urljoin(page,url['href'])
+                url = Spider.urlChecker(url)                
                 Spider.add_link(url)
 
+    def urlChecker(url):
+        if url.endswith('/'):
+            return url
+        else:
+            url += '/'
+            return url
+   
