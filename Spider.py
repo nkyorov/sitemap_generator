@@ -12,6 +12,7 @@ class Spider:
     crawled_urls = set()
     seed_url = ''
     seed_domain = ''
+    crawled = 0
 
     def __init__(self,url):
         Spider.seed_url = url
@@ -27,7 +28,12 @@ class Spider:
 
     def checkRobots(url):
         robots = Robots.fetch(Spider.seed_url + '/robots.txt')
-        return robots.allowed(url,'*')
+        agent = robots.agent('*')
+        agent_str = str(agent)
+        if len(agent_str) == 2:
+            return True
+        else:
+            return agent.allowed(url)
 
 
     def add_link(url):
@@ -45,6 +51,7 @@ class Spider:
 
         if NOT_SEEN and SAME_DOMAIN:
             Spider.urls_queue.add(url)
+            Spider.crawled += 1
 
     def extract(page):
         http = httplib2.Http()
