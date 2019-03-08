@@ -6,6 +6,7 @@ import tldextract
 import xml.etree.cElementTree as ET
 from reppy.robots import Robots
 import requests
+import sys
 
 class Spider:
     urls_queue = set()
@@ -13,18 +14,26 @@ class Spider:
     seed_url = ''
     seed_domain = ''
     crawled = 0
+    limit = 0
 
-    def __init__(self,url):
+    def __init__(self,url,limit):
         Spider.seed_url = url
         Spider.seed_domain = tldextract.extract(self.seed_url).registered_domain
+        Spider.limit = limit
         Spider.crawl(self.seed_url)
 
     def crawl(page):
         if page not in Spider.crawled_urls:
-            Spider.extract(page)
-            Spider.crawled_urls.add(page)
-            Spider.urls_queue.discard(page)
-            print("Crawling: " + page)
+            if(Spider.crawled < Spider.limit): 
+                Spider.extract(page)
+                Spider.crawled_urls.add(page)
+                Spider.urls_queue.discard(page)
+                print("Crawling: " + page)
+                Spider.crawled += 1
+            else:
+                print(Spider.crawled)
+                sys.exit("Maximum page limit reached!")
+
 
     def checkRobots(url):
         robots = Robots.fetch(Spider.seed_url + '/robots.txt')
@@ -51,7 +60,6 @@ class Spider:
 
         if NOT_SEEN and SAME_DOMAIN:
             Spider.urls_queue.add(url)
-            Spider.crawled += 1
 
     def extract(page):
         # http = httplib2.Http()

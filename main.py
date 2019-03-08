@@ -3,9 +3,7 @@ import time
 
 start = time.clock()
 url = "http://toscrape.com"
-Spider(url)
-
-count = 0
+Spider(url,10)
 
 while Spider.urls_queue:
     for link in Spider.urls_queue.copy():  
