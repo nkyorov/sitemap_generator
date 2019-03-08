@@ -2,6 +2,7 @@ import requests
 import urllib.request
 import httplib2
 import secrets
+import requests
 from bs4 import BeautifulSoup
 
 
@@ -24,10 +25,23 @@ def getListOfProxies():
     return proxies
 
 
-def getRandomProxy(list):
+def getRandomProxy(proxies):
     i = secrets.randbelow(len(proxies))
-    return proxies[i]
+    proxy = proxies[i]
+    ip = proxy['ip'] + ":" + proxy['port']
+    return ip,i
 
-# proxies = getListOfProxies()
-# proxy = getRandomProxy(proxies)
-# print(proxy)
+proxies = getListOfProxies()
+ip, index= getRandomProxy(proxies)
+
+while True:
+    try:
+        proxy, index= getRandomProxy(proxies)
+        p = {"http":"http://" + proxy,"https":"http://" + proxy}
+        r = requests.get("http://icanhazip.com",proxies=p,timeout=2)
+        if(r.status_code == 200):
+            print(r.text)
+    except:
+        print("Removing: " + str(proxies[index]))
+        del proxies[index]
+        print("DONE")
