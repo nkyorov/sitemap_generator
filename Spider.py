@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import tldextract
 import xml.etree.cElementTree as ET
 from reppy.robots import Robots
-
+import requests
 
 class Spider:
     urls_queue = set()
@@ -54,8 +54,9 @@ class Spider:
             Spider.crawled += 1
 
     def extract(page):
-        http = httplib2.Http()
-        status, response = http.request(page)
+        # http = httplib2.Http()
+        # status, response = http.requests(page)
+        response = requests.get(page).text
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
                 url = urljoin(page,url['href'])

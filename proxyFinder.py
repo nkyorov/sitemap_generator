@@ -4,7 +4,7 @@ import httplib2
 import secrets
 import requests
 from bs4 import BeautifulSoup
-
+from fake_useragent import UserAgent
 
 def getListOfProxies():
     proxies = []
@@ -34,14 +34,17 @@ def getRandomProxy(proxies):
 proxies = getListOfProxies()
 ip, index= getRandomProxy(proxies)
 
+
 while True:
     try:
-        proxy, index= getRandomProxy(proxies)
-        p = {"http":"http://" + proxy,"https":"http://" + proxy}
-        r = requests.get("http://icanhazip.com",proxies=p,timeout=2)
-        if(r.status_code == 200):
-            print(r.text)
+        ip, index= getRandomProxy(proxies)
+        userAgent = UserAgent().random
+        headers ={'User-Agent':userAgent}
+        proxy = {"http":"http://" + ip,"https":"http://" + ip}
+        response = requests.get("http://buzzfeed.com",proxies=proxy,timeout=2,headers=headers)
+        if(response.status_code == 200):
+            print("Request successful: " + ip)
+            print(len(proxies))
     except:
-        print("Removing: " + str(proxies[index]))
+        #print("Removing: " + str(proxies[index]))
         del proxies[index]
-        print("DONE")
