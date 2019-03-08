@@ -17,7 +17,7 @@ class Spider:
     limit = 0
 
     def __init__(self,url,limit):
-        Spider.seed_url = url
+        Spider.seed_url = Spider.urlChecker(url)
         Spider.seed_domain = tldextract.extract(self.seed_url).registered_domain
         Spider.limit = limit
         Spider.crawl(self.seed_url)
@@ -35,7 +35,7 @@ class Spider:
 
 
     def checkRobots(url):
-        robots = Robots.fetch(Spider.seed_url + '/robots.txt')
+        robots = Robots.fetch(Spider.seed_url + 'robots.txt')
         agent = robots.agent('*')
         agent_str = str(agent)
         if len(agent_str) == 2:
