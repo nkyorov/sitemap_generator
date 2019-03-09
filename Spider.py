@@ -32,7 +32,11 @@ class Spider:
                 print("Crawling: " + page)
                 Spider.crawled += 1
             else:
+<<<<<<< HEAD
                 print(Spider.listToXML)
+=======
+                Spider.createXML()
+>>>>>>> create_xml
                 sys.exit("Maximum page limit reached!")
 
 
@@ -81,4 +85,18 @@ class Spider:
         else:
             url += '/'
             return url
-   
+
+    def createXML():
+        xml = open('sitemap.xml','w')
+        xml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        xml.write("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")
+
+        for line in Spider.crawled_urls:
+            xml.write("\t<url>\n")
+            xml.write("\t\t<loc>%s</loc>\n" % line)
+            xml.write("\t\t<lastmod></lastmod>\n")
+            xml.write("\t\t<changefreq></changefreq>\n")
+            xml.write("\t\t<priority></priority>\n")
+            xml.write("\t</url>\n")
+        xml.write("</urlset>")
+        xml.close()
