@@ -1,7 +1,7 @@
 from Spider import *
 import time
 
-url = "http://buzzfeed.com"
+url = "http://toscrape.com"
 Spider(url,10)
 
 while Spider.urls_queue:

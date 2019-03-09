@@ -32,11 +32,7 @@ class Spider:
                 print("Crawling: " + page)
                 Spider.crawled += 1
             else:
-<<<<<<< HEAD
-                print(Spider.listToXML)
-=======
                 Spider.createXML()
->>>>>>> create_xml
                 sys.exit("Maximum page limit reached!")
 
 
@@ -72,7 +68,7 @@ class Spider:
         if 'Last-Modified' in header:
             last_mod = header['Last-Modified']
         else:
-            last_mod = 'Not available'
+            last_mod = '*'
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
                 url = urljoin(page,url['href'])
@@ -91,10 +87,13 @@ class Spider:
         xml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         xml.write("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n")
 
-        for line in Spider.crawled_urls:
+        for line in Spider.listToXML:
             xml.write("\t<url>\n")
-            xml.write("\t\t<loc>%s</loc>\n" % line)
-            xml.write("\t\t<lastmod></lastmod>\n")
+            xml.write("\t\t<loc>%s</loc>\n" % line['url'])
+            if line['last_mod'] != '*':
+                xml.write("\t\t<lastmod>%s</lastmod>\n" % line['last_mod'])
+            else:
+                xml.write("\t\t<lastmod></lastmod>\n")
             xml.write("\t\t<changefreq></changefreq>\n")
             xml.write("\t\t<priority></priority>\n")
             xml.write("\t</url>\n")
