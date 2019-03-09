@@ -15,6 +15,7 @@ class Spider:
     seed_domain = ''
     crawled = 0
     limit = 0
+    listToXML = []
 
     def __init__(self,url,limit):
         Spider.seed_url = Spider.urlChecker(url)
@@ -31,6 +32,7 @@ class Spider:
                 print("Crawling: " + page)
                 Spider.crawled += 1
             else:
+                print(Spider.listToXML)
                 sys.exit("Maximum page limit reached!")
 
 
@@ -44,7 +46,7 @@ class Spider:
             return agent.allowed(url)
 
 
-    def add_link(url):
+    def add_link(url,last_mod):
         NOT_SEEN = True
         SAME_DOMAIN = True
         
@@ -58,14 +60,20 @@ class Spider:
 
         if NOT_SEEN and SAME_DOMAIN:
             Spider.urls_queue.add(url)
+            Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
     def extract(page):
         response = requests.get(page).text
+        header = requests.head(page).headers
+        if 'Last-Modified' in header:
+            last_mod = header['Last-Modified']
+        else:
+            last_mod = 'Not available'
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
                 url = urljoin(page,url['href'])
                 url = Spider.urlChecker(url)                
-                Spider.add_link(url)
+                Spider.add_link(url,last_mod)
 
     def urlChecker(url):
         if url.endswith('/'):
