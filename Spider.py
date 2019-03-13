@@ -7,6 +7,9 @@ import xml.etree.cElementTree as ET
 from reppy.robots import Robots
 import requests
 import sys
+from GraphWriter import *
+
+
 
 class Spider:
     urls_queue = set()
@@ -18,12 +21,12 @@ class Spider:
     depth_limit = 0
     listToXML = []
 
-    def __init__(self,url,limit,depth_limit):
+    def __init__(self,url,limit=None,depth_limit=None):
         Spider.seed_url = Spider.urlChecker(url)
-        Spider.seed_domain = tldextract.extract(self.seed_url).registered_domain
+        Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
-        Spider.crawl(self.seed_url)
+        Spider.crawl(Spider.seed_url)
 
     def crawl(page):
         if page not in Spider.crawled_urls:
@@ -35,6 +38,7 @@ class Spider:
                 Spider.crawled += 1
             else:
                 Spider.createXML()
+                print(Spider.crawled_urls)
                 sys.exit("Maximum page limit reached!")
 
     def checkRobots(url):
@@ -104,3 +108,4 @@ class Spider:
             xml.write("\t</url>\n")
         xml.write("</urlset>")
         xml.close()
+
