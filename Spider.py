@@ -17,11 +17,10 @@ class Spider:
     seed_url = ''
     seed_domain = ''
     crawled = 0
-    limit = 0
-    depth_limit = 0
     listToXML = []
+    
 
-    def __init__(self,url,limit=None,depth_limit=None):
+    def __init__(self,url,limit=-1,depth_limit=-1):
         Spider.seed_url = Spider.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
@@ -30,7 +29,7 @@ class Spider:
 
     def crawl(page):
         if page not in Spider.crawled_urls:
-            if(Spider.crawled < Spider.limit): 
+            if((Spider.crawled < Spider.limit) or Spider.limit==-1): 
                 Spider.extract(page)
                 Spider.crawled_urls.add(page)
                 Spider.urls_queue.discard(page)
@@ -60,7 +59,7 @@ class Spider:
         if not domain == Spider.seed_domain:
             SKIP = True
         
-        if Spider.getDepth(url) > Spider.depth_limit:
+        if Spider.getDepth(url) > Spider.depth_limit and Spider.depth_limit != -1:
             SKIP = True
 
         if not SKIP:
