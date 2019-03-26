@@ -8,7 +8,7 @@ from reppy.robots import Robots
 import requests
 import sys
 from GraphWriter import *
-
+import time
 
 class Spider:
     urls_queue = set()
@@ -16,17 +16,23 @@ class Spider:
     seed_url = ''
     seed_domain = ''
     crawled = 0
-    listToXML = []    
+    listToXML = []
+    delay = 0    
 
     def __init__(self,url,limit=-1,depth_limit=-1):
         Spider.seed_url = LinkExtractor.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
+        Spider.delay = Spider.getDelay()
+        print(Spider.delay)
         Spider.urls_queue.add(Spider.seed_url)
 
         while Spider.urls_queue:
             for link in Spider.urls_queue.copy():  
+                print("5")
+                time.sleep(Spider.delay)
+                print("ELAPSED")
                 Spider.crawl(link)
         print(Spider.crawled)
 
@@ -42,6 +48,9 @@ class Spider:
                 print(Spider.crawled)
                 sys.exit("Maximum page limit reached!")
 
+    def getDelay():
+        return Robots.fetch(Spider.seed_url + 'robots.txt').agent('*').delay
+        
     def checkRobots(url):
         robots = Robots.fetch(Spider.seed_url + 'robots.txt')
         agent = robots.agent('*')
