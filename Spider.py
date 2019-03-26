@@ -28,18 +28,18 @@ class Spider:
         while Spider.urls_queue:
             for link in Spider.urls_queue.copy():  
                 Spider.crawl(link)
+        print(Spider.crawled)
 
     def crawl(page):
         if page not in Spider.crawled_urls:
-            if((Spider.crawled < Spider.limit) or Spider.limit==-1): 
+            if((Spider.crawled <= Spider.limit) or Spider.limit==-1): 
                 LinkExtractor.extract(page)
                 Spider.crawled_urls.add(page)
                 Spider.urls_queue.discard(page)
                 print("Crawling: " + page)
-                Spider.crawled += 1
             else:
                 Spider.createXML()
-                print(Spider.crawled_urls)
+                print(Spider.crawled)
                 sys.exit("Maximum page limit reached!")
 
     def checkRobots(url):
@@ -61,10 +61,7 @@ class Spider:
             xml.write("\t\t<loc>%s</loc>\n" % line['url'])
             if line['last_mod'] != '*':
                 xml.write("\t\t<lastmod>%s</lastmod>\n" % line['last_mod'])
-            else:
-                xml.write("\t\t<lastmod></lastmod>\n")
-            xml.write("\t\t<changefreq></changefreq>\n")
-            xml.write("\t\t<priority></priority>\n")
+            xml.write("\t\t<priority>0.5</priority>\n")
             xml.write("\t</url>\n")
         xml.write("</urlset>")
         xml.close()
@@ -74,7 +71,7 @@ class LinkExtractor:
         SKIP = False        
         domain = tldextract.extract(url).registered_domain
 
-        if url in Spider.crawled_urls:
+        if (url in Spider.crawled_urls) or (url in Spider.urls_queue):
             SKIP = True
         
         if not domain == Spider.seed_domain:
@@ -84,6 +81,7 @@ class LinkExtractor:
             SKIP = True
 
         if not SKIP:
+            Spider.crawled += 1
             Spider.urls_queue.add(url)
             Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
@@ -94,10 +92,10 @@ class LinkExtractor:
             last_mod = header['Last-Modified']
         else:
             last_mod = '*'
+
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
-                url = urljoin(page,url['href'])
-                url = LinkExtractor.urlChecker(url)                
+                url = urljoin(page,url['href'])        
                 LinkExtractor.add_link(url,last_mod)
 
     def urlChecker(url):
