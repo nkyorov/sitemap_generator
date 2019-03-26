@@ -23,7 +23,11 @@ class Spider:
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
-        Spider.crawl(Spider.seed_url)
+        Spider.urls_queue.add(Spider.seed_url)
+
+        while Spider.urls_queue:
+            for link in Spider.urls_queue.copy():  
+                Spider.crawl(link)
 
     def crawl(page):
         if page not in Spider.crawled_urls:

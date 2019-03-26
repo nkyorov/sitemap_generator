@@ -18,10 +18,7 @@ def crawl(url,limit, depth):
         depth = -1 
 
     Spider(url,limit,depth)
-    while Spider.urls_queue:
-        for link in Spider.urls_queue.copy():  
-            Spider.crawl(link)
-    
+
 
 if __name__ == '__main__':
     crawl()
