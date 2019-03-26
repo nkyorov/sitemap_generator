@@ -3,8 +3,8 @@ import click
 
 @click.command()
 @click.argument('url')
-@click.option("--limit", help="Number of greetings.")
-@click.option("--depth", help="Number of greetings.")
+@click.option("--limit", type=int, help="Limit the crawler, until that number is reached.")
+@click.option("--depth", type=int, help="Crawl until this level.")
 
 def crawl(url,limit, depth):
     if(bool(urlparse(url).scheme)):
