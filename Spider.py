@@ -10,18 +10,16 @@ import sys
 from GraphWriter import *
 
 
-
 class Spider:
     urls_queue = set()
     crawled_urls = set()
     seed_url = ''
     seed_domain = ''
     crawled = 0
-    listToXML = []
-    
+    listToXML = []    
 
     def __init__(self,url,limit=-1,depth_limit=-1):
-        Spider.seed_url = Spider.urlChecker(url)
+        Spider.seed_url = LinkExtractor.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
@@ -30,7 +28,7 @@ class Spider:
     def crawl(page):
         if page not in Spider.crawled_urls:
             if((Spider.crawled < Spider.limit) or Spider.limit==-1): 
-                Spider.extract(page)
+                LinkExtractor.extract(page)
                 Spider.crawled_urls.add(page)
                 Spider.urls_queue.discard(page)
                 print("Crawling: " + page)
@@ -49,47 +47,6 @@ class Spider:
         else:
             return agent.allowed(url)
 
-    def add_link(url,last_mod):
-        SKIP = False        
-        domain = tldextract.extract(url).registered_domain
-
-        if url in Spider.crawled_urls:
-            SKIP = True
-        
-        if not domain == Spider.seed_domain:
-            SKIP = True
-        
-        if Spider.getDepth(url) > Spider.depth_limit and Spider.depth_limit != -1:
-            SKIP = True
-
-        if not SKIP:
-            Spider.urls_queue.add(url)
-            Spider.listToXML.append({'url':url,'last_mod':last_mod})
-
-    def extract(page):
-        response = requests.get(page).text
-        header = requests.head(page).headers
-        if 'Last-Modified' in header:
-            last_mod = header['Last-Modified']
-        else:
-            last_mod = '*'
-        for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
-            if url.has_attr('href'):
-                url = urljoin(page,url['href'])
-                url = Spider.urlChecker(url)                
-                Spider.add_link(url,last_mod)
-
-    def urlChecker(url):
-        if url.endswith('/'):
-            return url
-        else:
-            url += '/'
-            return url
-
-    def getDepth(url):
-        url = urlparse(url).path
-        return url.count('/') - 1
-
     def createXML():
         xml = open('sitemap.xml','w')
         xml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
@@ -107,4 +64,45 @@ class Spider:
             xml.write("\t</url>\n")
         xml.write("</urlset>")
         xml.close()
+    
+class LinkExtractor:
+    def add_link(url,last_mod):
+        SKIP = False        
+        domain = tldextract.extract(url).registered_domain
 
+        if url in Spider.crawled_urls:
+            SKIP = True
+        
+        if not domain == Spider.seed_domain:
+            SKIP = True
+        
+        if LinkExtractor.getDepth(url) > Spider.depth_limit and Spider.depth_limit != -1:
+            SKIP = True
+
+        if not SKIP:
+            Spider.urls_queue.add(url)
+            Spider.listToXML.append({'url':url,'last_mod':last_mod})
+
+    def extract(page):
+        response = requests.get(page).text
+        header = requests.head(page).headers
+        if 'Last-Modified' in header:
+            last_mod = header['Last-Modified']
+        else:
+            last_mod = '*'
+        for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
+            if url.has_attr('href'):
+                url = urljoin(page,url['href'])
+                url = LinkExtractor.urlChecker(url)                
+                LinkExtractor.add_link(url,last_mod)
+
+    def urlChecker(url):
+        if url.endswith('/'):
+            return url
+        else:
+            url += '/'
+            return url
+
+    def getDepth(url):
+        url = urlparse(url).path
+        return url.count('/') - 1
