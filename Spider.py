@@ -7,8 +7,8 @@ import xml.etree.cElementTree as ET
 from reppy.robots import Robots
 import requests
 import sys
-from GraphWriter import *
 import time
+from GraphWriter import *
 
 class Spider:
     urls_queue = set()
@@ -25,27 +25,29 @@ class Spider:
         Spider.limit = limit
         Spider.depth_limit = depth_limit
         Spider.delay = Spider.getDelay()
-        print(Spider.delay)
+        if Spider.delay is None:
+            Spider.delay = 0
         Spider.urls_queue.add(Spider.seed_url)
 
         while Spider.urls_queue:
             for link in Spider.urls_queue.copy():  
-                print("5")
                 time.sleep(Spider.delay)
-                print("ELAPSED")
                 Spider.crawl(link)
-        print(Spider.crawled)
+        
+        Spider.createXML()
 
     def crawl(page):
         if page not in Spider.crawled_urls:
-            if((Spider.crawled <= Spider.limit) or Spider.limit==-1): 
+            if((Spider.crawled < Spider.limit) or Spider.limit==-1): 
                 LinkExtractor.extract(page)
                 Spider.crawled_urls.add(page)
                 Spider.urls_queue.discard(page)
                 print("Crawling: " + page)
+                Spider.crawled += 1
             else:
-                Spider.createXML()
                 print(Spider.crawled)
+                Spider.createXML()
+                GraphWriter(list(Spider.crawled_urls))
                 sys.exit("Maximum page limit reached!")
 
     def getDelay():
@@ -90,7 +92,6 @@ class LinkExtractor:
             SKIP = True
 
         if not SKIP:
-            Spider.crawled += 1
             Spider.urls_queue.add(url)
             Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
