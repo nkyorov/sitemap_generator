@@ -7,8 +7,10 @@ import xml.etree.cElementTree as ET
 from reppy.robots import Robots
 import requests
 import sys
+import random
 import time
 from GraphWriter import *
+from proxyFinder import *
 
 class Spider:
     urls_queue = set()
@@ -17,13 +19,16 @@ class Spider:
     seed_domain = ''
     crawled = 0
     listToXML = []
-    delay = 0    
+    delay = 0
+    proxies = []    
 
     def __init__(self,url,limit=-1,depth_limit=-1):
         Spider.seed_url = LinkExtractor.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
+        Spider.proxies = ProxyList().getList()
+
         Spider.delay = Spider.getDelay()
         if Spider.delay is None:
             Spider.delay = 0
@@ -96,7 +101,16 @@ class LinkExtractor:
             Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
     def extract(page):
-        response = requests.get(page).text
+        headers = ProxyList.getHeaders()
+        start = time.time()
+        proxy = ProxyList.getRandomProxy(Spider.proxies)
+        random.shuffle(Spider.proxies)
+        response = requests.get(page,proxies=proxy,headers=headers).text
+        end = time.time() - start
+        
+        #Spider.delay = end * 3
+
+        print('Proxy is: ' + str(proxy))
         header = requests.head(page).headers
         if 'Last-Modified' in header:
             last_mod = header['Last-Modified']
