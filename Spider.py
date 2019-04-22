@@ -21,14 +21,19 @@ class Spider:
     crawled = 0
     listToXML = []
     delay = 0
+    # Mode 0: Default
+    # Mode 1: Polite
+    # Mode 2: Aggressive
     proxy = False
+    crawl_mode = 0 
     proxies = []    
 
-    def __init__(self,url,limit=-1,depth_limit=-1,proxy=-1):
+    def __init__(self,url,limit=-1,depth_limit=-1,proxy=-1, crawl_mode=0):
         # Set fields
         Spider.seed_url = LinkExtractor.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
+        Spider.crawl_mode = crawl_mode
         Spider.depth_limit = depth_limit
         
         # Get proxies, if flag is turned on
@@ -37,10 +42,13 @@ class Spider:
             Spider.proxy = True
 
         # Set delays
-        Spider.delay = Spider.getDelay()
-        if Spider.delay is None:
-            Spider.delay = 0
-        
+        if Spider.crawl_mode == 0 or Spider.crawl_mode == 1:
+            Spider.delay = Spider.getDelay()
+            if Spider.delay is None:
+                Spider.delay = 0
+        else:
+            Spider.delay = 0 
+
         Spider.urls_queue.add(Spider.seed_url)
 
         # Crawl until no URLs are left in the queue
@@ -48,7 +56,6 @@ class Spider:
             for link in Spider.urls_queue.copy():  
                 time.sleep(Spider.delay)
                 Spider.crawl(link)
-
         # Create XML sitemap when done
         Spider.createXML()
 
@@ -124,15 +131,22 @@ class LinkExtractor:
     def extract(page):
         if Spider.proxy:
             headers = ProxyList.getHeaders()
-            start = time.time()
             proxy = ProxyList.getRandomProxy(Spider.proxies)
             random.shuffle(Spider.proxies)
-            response = requests.get(page,proxies=proxy,headers=headers).text
-            end = time.time() - start
-            Spider.delay = end * 2
-            print('Proxy is: ' + str(proxy))
+            try:
+                response = requests.get(page,proxies=proxy,headers=headers).text
+            except:
+                time.sleep(2)
+                proxy = ProxyList.getRandomProxy(Spider.proxies)
+                response = requests.get(page,proxies=proxy,headers=headers).text
         else:
-            response = requests.get(page).text
+            if Spider.crawl_mode == 1:
+                start = time.time()
+                response = requests.get(page).text
+                end = time.time() - start
+                Spider.delay = end * 2
+            else:
+                response = requests.get(page).text
         
         # Find last modification date
         header = requests.head(page).headers
