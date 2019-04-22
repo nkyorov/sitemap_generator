@@ -7,6 +7,7 @@ import xml.etree.cElementTree as ET
 from reppy.robots import Robots
 import requests
 import sys
+import datetime
 import random
 import time
 from GraphWriter import *
@@ -20,44 +21,61 @@ class Spider:
     crawled = 0
     listToXML = []
     delay = 0
+    proxy = False
     proxies = []    
 
-    def __init__(self,url,limit=-1,depth_limit=-1):
+    def __init__(self,url,limit=-1,depth_limit=-1,proxy=-1):
+        # Set fields
         Spider.seed_url = LinkExtractor.urlChecker(url)
         Spider.seed_domain = tldextract.extract(Spider.seed_url).registered_domain
         Spider.limit = limit
         Spider.depth_limit = depth_limit
-        Spider.proxies = ProxyList().getList()
+        
+        # Get proxies, if flag is turned on
+        if proxy == 1:
+            Spider.proxies = ProxyList().getList()
+            Spider.proxy = True
 
+        # Set delays
         Spider.delay = Spider.getDelay()
         if Spider.delay is None:
             Spider.delay = 0
+        
         Spider.urls_queue.add(Spider.seed_url)
 
+        # Crawl until no URLs are left in the queue
         while Spider.urls_queue:
             for link in Spider.urls_queue.copy():  
                 time.sleep(Spider.delay)
                 Spider.crawl(link)
-        
+
+        # Create XML sitemap when done
         Spider.createXML()
 
     def crawl(page):
+        # Crawl page if we haven't already
         if page not in Spider.crawled_urls:
+            # Check limits
             if((Spider.crawled < Spider.limit) or Spider.limit==-1): 
+                # Extract links
                 LinkExtractor.extract(page)
                 Spider.crawled_urls.add(page)
                 Spider.urls_queue.discard(page)
                 print("Crawling: " + page)
                 Spider.crawled += 1
+ 
+            # Crawl limit reached
             else:
                 print(Spider.crawled)
                 Spider.createXML()
                 GraphWriter(list(Spider.crawled_urls))
                 sys.exit("Maximum page limit reached!")
-
+    
+    # Finds the delay specified in robots.txt
     def getDelay():
         return Robots.fetch(Spider.seed_url + 'robots.txt').agent('*').delay
-        
+    
+    # Checks if a URL is allowed    
     def checkRobots(url):
         robots = Robots.fetch(Spider.seed_url + 'robots.txt')
         agent = robots.agent('*')
@@ -67,6 +85,7 @@ class Spider:
         else:
             return agent.allowed(url)
 
+    # Creates sitemap
     def createXML():
         xml = open('sitemap.xml','w')
         xml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
@@ -77,7 +96,6 @@ class Spider:
             xml.write("\t\t<loc>%s</loc>\n" % line['url'])
             if line['last_mod'] != '*':
                 xml.write("\t\t<lastmod>%s</lastmod>\n" % line['last_mod'])
-            xml.write("\t\t<priority>0.5</priority>\n")
             xml.write("\t</url>\n")
         xml.write("</urlset>")
         xml.close()
@@ -87,12 +105,15 @@ class LinkExtractor:
         SKIP = False        
         domain = tldextract.extract(url).registered_domain
 
+        # Skip pages that are already crawled or are already in the queue
         if (url in Spider.crawled_urls) or (url in Spider.urls_queue):
             SKIP = True
         
+        # Skip pages that are not in the same domain
         if not domain == Spider.seed_domain:
             SKIP = True
         
+        # Skip pages that are above the depth limit
         if LinkExtractor.getDepth(url) > Spider.depth_limit and Spider.depth_limit != -1:
             SKIP = True
 
@@ -101,22 +122,29 @@ class LinkExtractor:
             Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
     def extract(page):
-        headers = ProxyList.getHeaders()
-        start = time.time()
-        proxy = ProxyList.getRandomProxy(Spider.proxies)
-        random.shuffle(Spider.proxies)
-        response = requests.get(page,proxies=proxy,headers=headers).text
-        end = time.time() - start
+        if Spider.proxy:
+            headers = ProxyList.getHeaders()
+            start = time.time()
+            proxy = ProxyList.getRandomProxy(Spider.proxies)
+            random.shuffle(Spider.proxies)
+            response = requests.get(page,proxies=proxy,headers=headers).text
+            end = time.time() - start
+            Spider.delay = end * 2
+            print('Proxy is: ' + str(proxy))
+        else:
+            response = requests.get(page).text
         
-        #Spider.delay = end * 3
-
-        print('Proxy is: ' + str(proxy))
+        # Find last modification date
         header = requests.head(page).headers
         if 'Last-Modified' in header:
             last_mod = header['Last-Modified']
+            
+            # Convert to W3C Datetime format
+            last_mod = datetime.datetime.strptime(last_mod, "%a, %d %b %Y %H:%M:%S %Z")
         else:
             last_mod = '*'
 
+        # Extract all <a></a> tags on the webpage
         for url in BeautifulSoup(response,parse_only=SoupStrainer('a'),features='html.parser'):
             if url.has_attr('href'):
                 url = urljoin(page,url['href'])        

@@ -5,8 +5,9 @@ import click
 @click.argument('url')
 @click.option("--limit", type=int, help="Limit the crawler, until that number is reached.")
 @click.option("--depth", type=int, help="Crawl until this level.")
+@click.option("--proxies", is_flag=True, help="Turn on proxies")
 
-def crawl(url,limit, depth):
+def crawl(url,limit, depth,proxies):
     if(bool(urlparse(url).scheme)):
         pass
     else:
@@ -15,9 +16,12 @@ def crawl(url,limit, depth):
     if limit is None:
         limit = -1
     if depth is None:
-        depth = -1 
+        depth = -1
 
-    Spider(url,limit,depth)
+    if proxies:
+        Spider(url,limit,depth,proxy=1)
+    else:
+        Spider(url,limit,depth)
 
 
 if __name__ == '__main__':
