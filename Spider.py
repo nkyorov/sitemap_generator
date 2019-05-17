@@ -57,6 +57,7 @@ class Spider:
                 time.sleep(Spider.delay)
                 Spider.crawl(link)
         # Create XML sitemap when done
+        print(Spider.crawled)
         Spider.createXML()
 
     def crawl(page):
