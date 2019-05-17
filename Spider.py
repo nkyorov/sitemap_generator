@@ -59,6 +59,7 @@ class Spider:
         # Create XML sitemap when done
         print(Spider.crawled)
         Spider.createXML()
+        GraphWriter(list(Spider.crawled_urls))
 
     def crawl(page):
         # Crawl page if we haven't already
@@ -74,7 +75,6 @@ class Spider:
  
             # Crawl limit reached
             else:
-                print(Spider.crawled)
                 Spider.createXML()
                 GraphWriter(list(Spider.crawled_urls))
                 sys.exit("Maximum page limit reached!")

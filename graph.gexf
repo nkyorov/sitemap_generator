@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance">
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <meta>
+      <creator>NetworkX 2.2</creator>
+      <lastmodified>17/05/2019</lastmodified>
+    </meta>
+    <nodes>
+      <node id="quotes.toscrape.com" label="quotes.toscrape.com" />
+      <node id="/author/Steve-Martin" label="/author/Steve-Martin" />
+      <node id="books.toscrape.com" label="books.toscrape.com" />
+      <node id="/catalogue/rip-it-up-and-start-again_986/index.html" label="/catalogue/rip-it-up-and-start-again_986/index.html" />
+      <node id="/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html" label="/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html" />
+      <node id="toscrape.com" label="toscrape.com" />
+      <node id="/" label="/" />
+      <node id="/random" label="/random" />
+      <node id="/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html" label="/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html" />
+      <node id="/tag/love/" label="/tag/love/" />
+      <node id="/catalogue/the-black-maria_991/index.html" label="/catalogue/the-black-maria_991/index.html" />
+      <node id="/author/Jane-Austen" label="/author/Jane-Austen" />
+      <node id="/catalogue/soumission_998/index.html" label="/catalogue/soumission_998/index.html" />
+      <node id="/catalogue/the-requiem-red_995/index.html" label="/catalogue/the-requiem-red_995/index.html" />
+      <node id="/search.aspx" label="/search.aspx" />
+      <node id="/catalogue/page-2.html" label="/catalogue/page-2.html" />
+      <node id="/catalogue/its-only-the-himalayas_981/index.html" label="/catalogue/its-only-the-himalayas_981/index.html" />
+      <node id="/catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html" label="/catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html" />
+      <node id="/catalogue/olio_984/index.html" label="/catalogue/olio_984/index.html" />
+      <node id="/tag/friends/" label="/tag/friends/" />
+      <node id="/login" label="/login" />
+      <node id="" label="" />
+      <node id="/scroll" label="/scroll" />
+      <node id="/js" label="/js" />
+      <node id="/tableful" label="/tableful" />
+      <node id="/tag/humor/" label="/tag/humor/" />
+    </nodes>
+    <edges>
+      <edge id="0" source="quotes.toscrape.com" target="/author/Steve-Martin" />
+      <edge id="1" source="quotes.toscrape.com" target="/random" />
+      <edge id="2" source="quotes.toscrape.com" target="/tag/love/" />
+      <edge id="3" source="quotes.toscrape.com" target="/author/Jane-Austen" />
+      <edge id="4" source="quotes.toscrape.com" target="/search.aspx" />
+      <edge id="5" source="quotes.toscrape.com" target="/" />
+      <edge id="6" source="quotes.toscrape.com" target="/tag/friends/" />
+      <edge id="7" source="quotes.toscrape.com" target="/login" />
+      <edge id="8" source="quotes.toscrape.com" target="" />
+      <edge id="9" source="quotes.toscrape.com" target="/scroll" />
+      <edge id="10" source="quotes.toscrape.com" target="/js" />
+      <edge id="11" source="quotes.toscrape.com" target="/tableful" />
+      <edge id="12" source="quotes.toscrape.com" target="/tag/humor/" />
+      <edge id="13" source="books.toscrape.com" target="/catalogue/rip-it-up-and-start-again_986/index.html" />
+      <edge id="14" source="books.toscrape.com" target="/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html" />
+      <edge id="15" source="books.toscrape.com" target="/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html" />
+      <edge id="16" source="books.toscrape.com" target="/catalogue/the-black-maria_991/index.html" />
+      <edge id="17" source="books.toscrape.com" target="/catalogue/soumission_998/index.html" />
+      <edge id="18" source="books.toscrape.com" target="/catalogue/the-requiem-red_995/index.html" />
+      <edge id="19" source="books.toscrape.com" target="/catalogue/page-2.html" />
+      <edge id="20" source="books.toscrape.com" target="/catalogue/its-only-the-himalayas_981/index.html" />
+      <edge id="21" source="books.toscrape.com" target="/catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html" />
+      <edge id="22" source="books.toscrape.com" target="/catalogue/olio_984/index.html" />
+      <edge id="23" source="books.toscrape.com" target="" />
+      <edge id="24" source="toscrape.com" target="/" />
+    </edges>
+  </graph>
+</gexf>
