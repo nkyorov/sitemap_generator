@@ -1,6 +1,7 @@
 # Sitemap Generator Tool
 
-> Based on single threaded web crawler. The general behaviour can be described as neutral/polite. Sitemap is created in both XML file format, as well as plotted as a graph. Developed as part of the degree specification for BSc Computer Science with Distributed Systems, University of Leeds 2019.
+> Based on single threaded web crawler. Implemented in Python3.
+The general behaviour can be described as neutral/polite. Sitemap is created in both XML file format, as well as plotted as a graph. Developed as part of the degree specification for BSc Computer Science with Distributed Systems, University of Leeds 2019.
 ## Table of Contents 
 
 - [Manual Installation](#manual_installation)
