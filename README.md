@@ -5,6 +5,7 @@
 
 - [Manual Installation](#manual_installation)
 - [Automatic Installation](#automatic_installation)
+- [Usage](#usage)
 
 
 
@@ -44,7 +45,29 @@ $ sh setup.sh
 ```
 
 
+## Usage 
+### Standard crawling
+```shell
+> python3 main.py toscrape.com
+```
 
+### Crawl only 500 pages from the specified URL
+
+```shell
+> python3 main.py www.leeds.ac.uk --limit 500
+```
+
+### Crawl aggressively pages until level 3
+
+```shell
+> python3 main.py www.leeds.ac.uk --crawl_mode aggressive
+```
+
+### Crawl with proxies enabled
+
+```shell
+> python3 main.py www.leeds.ac.uk --proxies
+```
 
 
 
