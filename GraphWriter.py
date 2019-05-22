@@ -11,6 +11,7 @@ class GraphWriter:
         self.saveGraph()
 
     def createGraph(self,url):
+        # Create the graph with labels, the URL of the website
         for i in range(len(url)):
             parsed= urlparse(url[i])
             print('path    :', parsed.path) 
@@ -22,7 +23,9 @@ class GraphWriter:
     def saveGraph(self):
         pos = nx.spring_layout(self.g,k=0.3*1/np.sqrt(len(self.g.nodes())))
         nx.draw(self.g, with_labels=True,pos=pos)
+        # Save graph as pdf
         plt.savefig("graph.pdf")
         
+        # Save graph data in gexf format
         return nx.write_gexf(self.g,"graph.gexf")
 

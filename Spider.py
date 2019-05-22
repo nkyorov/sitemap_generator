@@ -130,6 +130,7 @@ class LinkExtractor:
             Spider.listToXML.append({'url':url,'last_mod':last_mod})
 
     def extract(page):
+        # Set up proxies and headers, if the flag is specified
         if Spider.proxy:
             headers = ProxyList.getHeaders()
             proxy = ProxyList.getRandomProxy(Spider.proxies)
@@ -165,6 +166,7 @@ class LinkExtractor:
                 url = urljoin(page,url['href'])        
                 LinkExtractor.add_link(url,last_mod)
 
+    # Handles missing trailing slashes
     def urlChecker(url):
         if url.endswith('/'):
             return url
@@ -172,6 +174,7 @@ class LinkExtractor:
             url += '/'
             return url
 
+    # Calculates depth of a pages
     def getDepth(url):
         url = urlparse(url).path
         return url.count('/') - 1
