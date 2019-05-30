@@ -45,6 +45,16 @@ Run the basic script that sets up the virtual environment and installs required 
 $ sh setup.sh
 ```
 
+## Proxies
+Proxies are scraped from [SSLproxies](https://www.sslproxies.org/) using BeautifulSoup4. All one hundred proxies are tested by making requests to a random URL and checking the status code for the response. Each request has a TTL of two(2) seconds. Increasing the timeout value in file [proxyFinder.py] will result in bigger final list of proxies but will increase the time required to test all proxies. Smaller timeouts will result in fewer available proxies, however the testing phase is completed much faster.
+
+## Optional Arguments
+|               | Description             | Accepted values       |
+| ------------- |:---------------------  :| ----------------:     |
+| --limit       | Crawl only N URLs       | Positive Integer      |
+| --depth       | Crawl until depth level | Positive Integer      |
+| --proxies     | Enable proxy support    | Boolean               |
+| --crawl_mode  | Specify behaviour       | `aggressive`/`polite` |
 
 ## Usage 
 ### Standard crawling
