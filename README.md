@@ -51,12 +51,12 @@ Proxies are scraped from [SSLproxies](https://www.sslproxies.org/) using Beautif
 ## Optional Arguments
 
 
-|               | Description             | Accepted values       |
-| ------------- |:---------------------  :| ----------------:     |
-| --limit       | Crawl only N URLs       | Positive Integer      |
-| --depth       | Crawl until depth level | Positive Integer      |
-| --proxies     | Enable proxy support    | Boolean               |
-| --crawl_mode  | Specify behaviour       | `aggressive`/`polite` |
+| Argument | Description| Accepted values|
+| ---| --- | ---     |
+| limit| Crawl only N URLs       | Positive Integer      |
+| depth | Crawl until depth level | Positive Integer      |
+| proxies | Enable proxy support | Boolean               |
+| crawl_mode | Specify behaviour | `aggressive`/`polite` |
 
 ## Usage 
 ### Standard crawling
