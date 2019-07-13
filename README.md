@@ -11,6 +11,9 @@ The general behaviour can be described as neutral/polite. Sitemap is created in 
   - [Optional parameters](#optional_args)
   - [Accepted seed URLs](#accepted_seed)
 - [Crawler behaviour](#behaviour)
+  - [Neutral](#neutral_b)
+  - [Polite](#polite_b)
+  - [Aggressive](#aggresive_b)
 - [Features](#features)
   - [Proxies](#proxies)
   - [User Agents](#user-agents)
@@ -126,4 +129,6 @@ Requests can be made with randomly generated user-agents using [fake-useragent](
 ```shell
 > python3 main.py www.leeds.ac.uk --crawl_mode aggressive
 ```
+
+## Issues
 
