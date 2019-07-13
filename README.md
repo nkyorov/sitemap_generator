@@ -13,6 +13,9 @@ The general behaviour can be described as neutral/polite. Sitemap is created in 
   - [User Agents](#user-agents)
   - [Page limit](#page-limit)
   - [Depth limit](#depth_limit)
+- [CLI](#)
+  - [Optional parameters](#optional_args)
+  - [Accepted seed URLs](#accepted_seed)
 - [Sitemaps](#)
   - [XML](#xml)
   - [Graphical](#graph)
@@ -55,6 +58,33 @@ all containing all packages to speed up the process.
 ```shell
 $ pip3 install -r requirements.txt
 ```
+
+## CLI
+
+```shell
+> python3 main.py seed_url [--optional_parameter]
+```
+
+### Accepted seed URLs
+
+|  | Accepted|
+| ---| ---     |
+| leeds.ac.uk| :heavy_check_mark: |
+| http://www.leeds.ac.uk | :heavy_check_mark:|
+| http://leeds.ac.uk | :heavy_check_mark: |
+| https://www.leeds.ac.uk/events | :heavy_check_mark: |
+| www.leeds.ac.uk | :heavy_check_mark: |
+
+### Optional Parameter
+
+| Parameter | Description| Accepted values|
+| ---| --- | ---     |
+| limit| Crawl only N URLs       | Positive Integer      |
+| depth | Crawl until depth level | Positive Integer      |
+| proxies | Enable proxy support | Boolean               |
+| crawl_mode | Specify behaviour | `aggressive`/`polite` |
+
+
 ## Crawler behaviour
 ### Neutral
 Default at startup. Crawler will respect the robots exclusion protocol and will set a `Crawl-delay:`, if one is specified.
@@ -67,23 +97,13 @@ Crawler ignores any specified delays but will respect the `robots.txt` file. Pro
 
 ## Features
 ### Proxies
-Proxies are scraped from [SSLproxies](https://www.sslproxies.org/) using BeautifulSoup4. All one hundred proxies are tested by making requests to a random URL and checking the status code for the response. Each request has a TTL of two(2) seconds. Increasing the timeout value in file [proxyFinder.py] will result in bigger final list of proxies but will increase the time required to test all proxies. Smaller timeouts will result in fewer available proxies, however the testing phase is completed much faster.
+Proxies are scraped from [SSLproxies](https://www.sslproxies.org/) using BeautifulSoup4. All one hundred proxies are tested by making requests to a random URL and checking the status code for the response. Each request has a TTL of two(2) seconds. Increasing the timeout value in [file](proxyFinder.py) will result in bigger final list of proxies but will increase the time required to test all proxies. Smaller timeouts will result in fewer available proxies, however the testing phase is completed much faster.
 
 ### User agents
 Requests can be made with randomly generated user-agents using [fake-useragent](https://github.com/hellysmile/fake-useragent)
 
 ### Limits
 #### Depth Limit
-
-## Optional Arguments
-
-
-| Argument | Description| Accepted values|
-| ---| --- | ---     |
-| limit| Crawl only N URLs       | Positive Integer      |
-| depth | Crawl until depth level | Positive Integer      |
-| proxies | Enable proxy support | Boolean               |
-| crawl_mode | Specify behaviour | `aggressive`/`polite` |
 
 ## Usage 
 ### Standard crawling
@@ -95,7 +115,3 @@ Requests can be made with randomly generated user-agents using [fake-useragent](
 ```shell
 > python3 main.py www.leeds.ac.uk --proxies
 ```
-
-
-
-
