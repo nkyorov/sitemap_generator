@@ -94,7 +94,7 @@ Ideal for medium to large scale websites that do not impose any politeness polic
 ### Polite
 Crawler will respect the robots exclusion protocol and will check for a `Crawl-delay:`. If there is no delay set in `robots.txt`, the crawler will use adaptive delay calculated from the server response time. This prevents slower servers from getting overloaded with requests.
 
-Ideal for small scale websites
+Ideal for small scale websites.
 
 ### Aggressive
 Crawler ignores any specified delays but will respect the `robots.txt` file. Proxies support enabled by default in this mode.
