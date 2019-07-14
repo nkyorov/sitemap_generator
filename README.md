@@ -107,7 +107,9 @@ Requests can be made with randomly generated user-agents using [fake-useragent](
 
 ### Limits
 #### Depth Limit
+Depth of a webpage is the number of clicks required to visit a page, from the homepage. For example https://www.bbc.com/news is at depth 1 (or 0), while https://www.bbc.com/news/technology, has a depth of 2.
 #### Crawl Limit
+Used to prevent the crawler from visiting more pages than specified.
 
 ## Usage 
 ### Standard crawling
