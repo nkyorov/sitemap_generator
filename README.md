@@ -133,4 +133,6 @@ Used to prevent the crawler from visiting more pages than specified.
 ```
 
 ## Issues
-
+- Graphical sitemaps in PDF format become unreadable if the graph contains thousands of nodes.
+- Progress is not saved in case of interrupt. 
+- Scraped proxies are not guaranteed to work. Testing for each proxy is introduced with slight time impact.
