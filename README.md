@@ -19,9 +19,6 @@ The general behaviour can be described as neutral/polite. Sitemap is created in 
   - [User Agents](#user-agents)
   - [Page limit](#page-limit)
   - [Depth limit](#depth_limit)
-- [Sitemaps](#)
-  - [XML](#xml)
-  - [Graphical](#graph)
 - [Usage](#usage)
 - [Issues](#issues)
 
